@@ -1,0 +1,20 @@
+
+:local(.item) {
+    width: 300px;
+    height: 30px;
+    line-height: 30px;
+}
+
+:local(.itemtext) {
+    float: left;
+}
+
+:local(.item .icon) {
+    margin-left: 10px;
+    float: right;
+    line-height: 30px;
+}
+
+:local(.page) {
+    margin-top: 20px;
+}

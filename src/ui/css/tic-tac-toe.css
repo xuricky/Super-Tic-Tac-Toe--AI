@@ -1,0 +1,18 @@
+:local(.board) {
+    display: flex;
+    flex-direction: row;
+    width: 170px;
+    margin: 5px;
+}
+
+:local(.board:after) {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+:local(.board-row:after) {
+    clear: both;
+    content: "";
+    display: table;
+}

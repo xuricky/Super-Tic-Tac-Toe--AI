@@ -1,0 +1,13 @@
+:local(.player) {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+:local(.player svg) {
+    width: 30px;
+    height: 30px;
+    margin: 20px;
+    cursor: pointer;
+}

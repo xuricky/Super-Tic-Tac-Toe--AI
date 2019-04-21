@@ -1,0 +1,47 @@
+:local(.title) {
+    width: 100%;
+    text-align: center;
+    margin: 10px;
+    font-size: 30px;
+}
+
+:local(.global-board) {
+    display: flex;
+    flex-direction: row;
+    width: 535px;
+}
+
+
+:local(.local-board:after) {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+:local(.mask) {
+    width: 100%;
+    opacity: 0.3;
+    pointer-events: none;
+    position: relative;
+    /* border:1px solid chartreuse; */
+    box-sizing: border-box;
+    margin-right: -1px;
+    margin-bottom: -1px;
+}
+
+:local(.nomask) {
+    width: 100%;
+    position: relative;
+    /* border:1px solid chartreuse; */
+    box-sizing: border-box;
+    margin-right: -1px;
+    margin-bottom: -1px;
+}
+
+:local(.text) {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 66px;
+}

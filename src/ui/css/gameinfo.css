@@ -1,0 +1,26 @@
+:local(.gameinfo) {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+:local(button) {
+    background: #fff;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    text-align: center;
+    width: 70px;
+    color: gray;
+}
+
+:local(button:focus) {
+    outline: none;
+}
+
+:local(button:hover) {
+    color: #000;
+}
