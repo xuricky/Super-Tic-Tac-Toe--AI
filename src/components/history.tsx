@@ -57,7 +57,7 @@ export class History extends React.Component<HistoryProps> {
     }
     
     renderdata() {
-        let data = this.props.data;
+        let data: HistoryData[] = Storage.get(KEY);
         if (!data) return;
         let page = this.state.current;
         let pagesize = this.state.defaultPageSize;
@@ -101,7 +101,10 @@ export class History extends React.Component<HistoryProps> {
         let data = Storage.get(KEY);
         if (data) data.splice(index, 1);
         Storage.remove(KEY);
-        data.forEach((_data: HistoryData) => Storage.set(KEY, _data))
+        data.forEach((_data: HistoryData) => Storage.set(KEY, _data));
+        this.setState({
+            current: this.state.current, 
+        })
     }
 }
 

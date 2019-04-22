@@ -11,3 +11,7 @@
     margin: 20px;
     cursor: pointer;
 }
+
+:local(.exit) {
+    margin: auto 30px;
+}

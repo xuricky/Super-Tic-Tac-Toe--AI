@@ -34,7 +34,7 @@ export class MctsNode {
         const now = new Date().getTime();
         let boardState = this._getBoardState(this.board);
         while(new Date().getTime() - now < 1e3 * time) {
-            for (let i = 0; i < 1000; i++) {
+            for (let i = 0; i < 100; i++) {
                 const now_ = new Date().getTime();
                 this.createChildren(this.board, boardState, this.move);
                 GlobalBoard.timeCount += (new Date().getTime() - now_) / 1000;

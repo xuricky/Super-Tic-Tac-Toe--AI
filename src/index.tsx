@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import { SuperTicTacToe } from './components/super-tic-tac-toe';
 import { Storage, KEY } from './common/storage';
 import {History} from './components/history';
+import { HistoryData } from './common/globalboard';
 import 'antd/lib/layout/style/css';
 import 'antd/lib/menu/style/css';
 import 'antd/lib/icon/style/css';
@@ -30,6 +31,7 @@ export class App extends React.Component {
     visible: boolean,
     autoplay: boolean,
     model: Model,
+    historydata: HistoryData | null,
   }
   constructor(props: any) {
     super(props);
@@ -38,6 +40,7 @@ export class App extends React.Component {
       visible: false,
       autoplay: false,
       model: Model.P2P,
+      historydata: null,
     };
   }
 
@@ -95,7 +98,8 @@ export class App extends React.Component {
           </Header>
           <Content className='content' id='content'>
             <SuperTicTacToe autoplay={this.state.autoplay}
-                            model={this.state.model}/>
+                            model={this.state.model}
+                            historydata={this.state.historydata}/>
             <div className='hostory'>
                 <History data={historyData}
                         handlePlay={(index: number) => this._hanlePlayHistory(index)}
@@ -118,6 +122,9 @@ export class App extends React.Component {
      this.state.model = Model.ai_medium;
     else if (key === '2-2-3')
       this.state.model = Model.ai_hard;
+    this.setState({
+      model: this.state.model,
+    })
   }
 
   private _openRule() {
@@ -144,9 +151,11 @@ export class App extends React.Component {
 
   private _hanlePlayHistory(index: number) {
     console.log('play');
+    let historydata = Storage.get(KEY)[index];
     this.setState({
       autoplay: true,
-      visible: false
+      visible: false,
+      historydata,
     })
   }
 

@@ -14,9 +14,7 @@ export interface GameInfoProps {
     handleGameOver(): void;
     handleBack(): void;
     handleSave(): void;
-    changeModel(): void;
     gameStart: boolean;
-    ModelIsHumanVsAi: boolean;
     winner: State
 }
 
@@ -38,11 +36,11 @@ export class GameInfo extends React.Component<GameInfoProps> {
                             disabled={this.props.winner !== State.active}>
                         悔棋
                     </Button>
-                    <Button type='primary'
+                    {/* <Button type='primary'
                             onClick={this.props.changeModel}
                             disabled={!this.props.gameStart}>
                         {this.props.ModelIsHumanVsAi ? '人机' : '人人'}
-                    </Button>
+                    </Button> */}
                     <Button type='primary'
                             onClick={this.props.handleSave}>
                         保存

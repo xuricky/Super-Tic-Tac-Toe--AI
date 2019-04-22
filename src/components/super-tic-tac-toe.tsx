@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TicTacToe } from './tic-tac-toe';
 const SuperTicTacToeCss = require('../ui/css/super-tic-tac-toe.css');
 import { GameInfo } from './gameInfo';
-import { GlobalBoard } from '../common/globalboard';
+import { GlobalBoard, HistoryData } from '../common/globalboard';
 import { Type, State } from '../common/localboard';
 import { MctsNode } from '../ai/mcts';
 import { Storage } from '../common/storage';
@@ -16,6 +16,7 @@ interface SuperTicTacToeProps {
     [propname: string]: any;
     autoplay: boolean;
     model: Model;
+    historydata: HistoryData | null;
 }
 
 interface SuperTicTacToeState{
@@ -23,10 +24,13 @@ interface SuperTicTacToeState{
     gameStart: boolean;
     config: any;
     endGame: boolean;
-    ModelIsHumanVsAi: boolean;
     lastMove: number[];
     update: boolean;
-    winner: State
+    winner: State;
+    autoplay: boolean;
+    model: Model;
+    historydata: HistoryData | null;
+    playing: boolean;
 }
 
 export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTicTacToeState> {
@@ -42,10 +46,13 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
                 [Type.AI]: 'O'
             },
             endGame: false,
-            ModelIsHumanVsAi: true,
             lastMove: [-1, -1],
             update: false,
             winner: State.active,
+            autoplay: this.props.autoplay,
+            model: this.props.model,
+            historydata: this.props.historydata,
+            playing: false,
         }
     }
 
@@ -71,13 +78,16 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
                         {this._renderTicTacToe(8)}
                     </div>
                 </div>
-                {this.props.autoplay ? <Player></Player> : <GameInfo handleGameStart={() => this._handleGameStart()}
+                {this.state.autoplay ? <Player getout={() => this.exitplayer()}
+                                                back={() => this._handlePlayerBack()}
+                                                next={() => this._handlePlayerNext()}
+                                                play={() => this._hanlePlayerPlay()}
+                                                pause={() => this._hanlePlayerPause()}
+                                                playing={this.state.playing}></Player> : <GameInfo handleGameStart={() => this._handleGameStart()}
                           handleGameOver={() => this._handleGameOver()}
                           handleBack={() => this._handleBack()}
                           handleSave={() => this._handleSave()}
-                          changeModel = {() => this._changeModel()}
                           gameStart={this.state.gameStart}
-                          ModelIsHumanVsAi={this.state.ModelIsHumanVsAi}
                           winner={this.state.winner}></GameInfo>}
             </div>
         )
@@ -149,25 +159,22 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
         });
     }
     
-    private _changeModel() {
-        this.setState({
-            ModelIsHumanVsAi: !this.state.ModelIsHumanVsAi
-        });
-    }
-
     componentDidUpdate() {
         let gb = this.state.gb;
         let AITurn = gb.getGlobalData().AIIsNext;
         setTimeout(() => {
-            if (this.props.model !== Model.P2P && AITurn) {
+            if (this.state.model !== Model.P2P && AITurn) {
+                let time = this.state.model === Model.ai_easy ? 0.1 : 
+                            this.state.model === Model.ai_medium ? 0.5 : 1;
                 let mcts = new MctsNode(null, !AITurn, this.state.lastMove);
-                let move = mcts.getBestMove();
+                let move = mcts.getBestMove(time);
                 if (move)
                     this._handleClick(move, !AITurn);
             }
             let state_ = gb.getState();
             if (!this.state.endGame && state_ !== null && state_ !== State.active) {
                 // alert(`Game over,${state_ === State.ai_win ? 'AI WIN!' : state_ === State.human_win ? 'HUMEN WIN!' : '平局！'}`);
+                this._handleSave();
                 this.setState({
                     endGame: true,
                     winner: state_,
@@ -190,6 +197,40 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
             gb.save();
             info();
         }
+    }
+
+    private exitplayer() {
+        this.setState({
+            autoplay: false,
+        })
+    }
+
+    componentWillReceiveProps(nextProps: SuperTicTacToeProps) {
+        this.setState({
+            autoplay: nextProps.autoplay,
+            model: nextProps.model,
+            historydata: nextProps.historydata,
+        })
+    }
+
+    private _handlePlayerBack() {
+
+    }
+
+    private _handlePlayerNext() {
+
+    }
+
+    private _hanlePlayerPlay() {
+        this.setState({
+            playing: !this.state.playing,
+        })
+    }
+
+    private _hanlePlayerPause() {
+        this.setState({
+            playing: !this.state.playing,
+        })
     }
 }
 
