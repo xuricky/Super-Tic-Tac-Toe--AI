@@ -73,6 +73,10 @@ export class History extends React.Component<HistoryProps> {
         })
     }
 
+    componentWillReceiveProps(nextProps: any) {
+        this.setState({visible: nextProps.visible});
+    }
+
     private onClose() {
         this.setState({
             visible: false,

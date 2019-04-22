@@ -35,7 +35,7 @@ export class App extends React.Component {
     super(props);
     this.state = {
       collapsed: false,
-      visible: true,
+      visible: false,
       autoplay: false,
       model: Model.P2P,
     };
