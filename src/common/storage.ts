@@ -1,8 +1,8 @@
-import { HistoryData } from './globalboard';
+import { StorageData } from './globalboard';
 import { State } from './localboard';
 
 export interface History {
-    data: HistoryData[],
+    data: StorageData[],
     state: State,
     time: string,  
 }

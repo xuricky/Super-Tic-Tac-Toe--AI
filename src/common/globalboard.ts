@@ -3,14 +3,9 @@ import { SquareState } from '../components/square';
 import {History, Storage, KEY} from './storage';
 
 
-interface Step {
+export interface StorageData {
     id: number[],
     isAI: boolean,
-}
-
-interface StorageData {
-    steps: Step[],
-    state: State    
 }
 
 interface GlobalData {
@@ -38,7 +33,7 @@ export class GlobalBoard {
     private state: State = State.active;
     private utttState: SquareState[][] = [];
     private backMove: number[] = [];
-    private storagedata: StorageData = {steps: [], state: State.active};
+    private storagedata: StorageData[] = [];
     constructor() {
         this.globalData = {
             AIIsNext: false,
@@ -114,8 +109,13 @@ export class GlobalBoard {
         this.historyData.push({global, globalData, state});
     }
 
+    private stashStorageData(id: number[], isAI: boolean) {
+        this.storagedata.push({id, isAI});
+    }
+
     public pushData(id: number[], isAI: boolean) {
         this.stashHistoryData();
+        this.stashStorageData(id, isAI);
         this.global[id[0]].pushData(id[1], isAI);
         this.globalData.AIIsNext = !this.globalData.AIIsNext;
         this.globalData.lastMove = id;
@@ -158,6 +158,7 @@ export class GlobalBoard {
             this.initStartData();
         } else if (step < len) {
             let leftDatas = this.historyData.splice(step, len);
+            this.storagedata.splice(step, len);
             for (let i = 0; i < this.global.length; i++) {
                 let local = this.global[i];
                 local.setVirtualData(leftDatas[0].global[i]);
@@ -249,7 +250,7 @@ export class GlobalBoard {
     public save() {
         let date = new Date();
         let time = `${date.getMonth() + 1}月${date.getDate()}号${date.getHours()}时${date.getMinutes()}分`;
-        let historyData: History = {time, state: this.state, data: this.historyData}
+        let historyData: History = {time, state: this.state, data: this.storagedata}
         Storage.set(KEY, historyData);
     }
 }

@@ -9,6 +9,7 @@ import 'antd/lib/pagination/style/css';
 interface HistoryProps {
     handlePlay(index: number): void,
     handleDeleteHistory(): void;
+    handleCloseHistory(): void;
     visible: boolean,
     data: HistoryData[],
 }
@@ -34,8 +35,8 @@ export class History extends React.Component<HistoryProps> {
             <div>
                 <Drawer title='历史记录'
                         placement='right'
-                        closable={false}
-                        onClose={this.onClose.bind(this)}
+                        closable={true}
+                        onClose={this.props.handleCloseHistory}
                         visible={this.state.visible}
                         width='350px'
                         >

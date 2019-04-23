@@ -39,6 +39,7 @@ interface SuperTicTacToeState{
 
 export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTicTacToeState> {
     private gb: GlobalBoard;
+    private timer: any;
     constructor(props: SuperTicTacToeProps) {
         super(props);
         this.gb = GlobalBoard.getInstance();
@@ -144,7 +145,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
         this.gb.initStartData();
         this.setState({
             gb: this.gb,
-            gameStart: !this.state.gameStart,
+            gameStart: false,
             endGame: false
         });
     }
@@ -153,7 +154,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
         this.gb.clearData();
         this.setState({
             gb: this.gb,
-            gameStart: !this.state.gameStart,
+            gameStart: true,
             winner: State.active,
         });
     }
@@ -206,6 +207,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
     }
 
     private exitplayer() {
+        this._handleGameOver();
         this.setState({
             autoplay: false,
         })
@@ -221,8 +223,15 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
         })
     }
 
+    componentDidMount() {
+        if (this.state.autoplay) {
+            this._handleGameStart();
+        }
+    }
+
     private _handlePlayerBack() {
         if (this.state.min > 0) {
+            this.state.gb.deleteLastData();
             this.setState({
                 min: this.state.min - 1,
             })
@@ -231,20 +240,37 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
 
     private _handlePlayerNext() {
         if (this.state.min < this.state.max) {
-            this.setState({
-                min: this.state.min + 1,
-            })
+            if (this.state.historydata) {
+                let data = this.state.historydata.data[this.state.min];
+                this._handleClick(data.id, data.isAI);
+                this.setState({
+                    min: this.state.min + 1,
+                })
+            }
         }
     }
 
     private _hanlePlayerPlay() {
-        this.setState({
-            min: this.state.min + 1,
-            playing: !this.state.playing,
-        })
+        if (!this.state.playing) {
+            this.timer = setInterval(() => {
+                if (this.state.historydata) {
+                    let data = this.state.historydata.data[this.state.min];
+                    if (this.state.min <= this.state.max) {
+                        this._handleClick(data.id, data.isAI);
+                        this.setState({
+                            min: this.state.min + 1,
+                            playing: true,
+                        })
+                    } else {
+                        clearInterval(this.timer);
+                    }
+                }
+            }, 1000)
+        }
     }
 
     private _hanlePlayerPause() {
+        clearInterval(this.timer);
         this.setState({
             playing: !this.state.playing,
         })

@@ -105,6 +105,7 @@ export class App extends React.Component {
                 <History data={historyData}
                         handlePlay={(index: number) => this._hanlePlayHistory(index)}
                         handleDeleteHistory={() => this._handleDeleteHistory()}
+                        handleCloseHistory={() => this.closeHistory()}
                         visible={this.state.visible}>
                 </History>
             </div>
@@ -150,8 +151,14 @@ export class App extends React.Component {
     }
   }
 
+  private closeHistory() {
+    this.setState({
+      visible: false,
+      autoplay: false,
+    })
+  }
+
   private _hanlePlayHistory(index: number) {
-    console.log('play');
     let historydata = Storage.get(KEY)[index];
     this.setState({
       autoplay: true,
