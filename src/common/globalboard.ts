@@ -3,6 +3,16 @@ import { SquareState } from '../components/square';
 import {History, Storage, KEY} from './storage';
 
 
+interface Step {
+    id: number[],
+    isAI: boolean,
+}
+
+interface StorageData {
+    steps: Step[],
+    state: State    
+}
+
 interface GlobalData {
     AIIsNext: boolean,
     data: number[][],
@@ -22,13 +32,13 @@ export class GlobalBoard {
         return this.INSTANCE;
     }
     static timeCount: number = 0;
-    private multiple: number = 2;
     private global: LocalBoard[] = [];
     private historyData: HistoryData[] = [];
     private globalData: GlobalData;
     private state: State = State.active;
     private utttState: SquareState[][] = [];
     private backMove: number[] = [];
+    private storagedata: StorageData = {steps: [], state: State.active};
     constructor() {
         this.globalData = {
             AIIsNext: false,

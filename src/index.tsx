@@ -4,9 +4,8 @@ import { Layout, Menu, Icon, Button, message, Alert } from 'antd';
 import './ui/css/index.css';
 import * as serviceWorker from './serviceWorker';
 import { SuperTicTacToe } from './components/super-tic-tac-toe';
-import { Storage, KEY } from './common/storage';
+import { Storage, KEY, History as HistoryData } from './common/storage';
 import {History} from './components/history';
-import { HistoryData } from './common/globalboard';
 import 'antd/lib/layout/style/css';
 import 'antd/lib/menu/style/css';
 import 'antd/lib/icon/style/css';
@@ -99,7 +98,9 @@ export class App extends React.Component {
           <Content className='content' id='content'>
             <SuperTicTacToe autoplay={this.state.autoplay}
                             model={this.state.model}
-                            historydata={this.state.historydata}/>
+                            historydata={this.state.historydata}
+                            min={0}
+                            max={this.state.historydata ? this.state.historydata.data.length - 1 : 0}/>
             <div className='hostory'>
                 <History data={historyData}
                         handlePlay={(index: number) => this._hanlePlayHistory(index)}

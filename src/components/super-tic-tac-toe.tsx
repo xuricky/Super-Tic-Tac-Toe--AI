@@ -2,10 +2,10 @@ import * as React from 'react';
 import { TicTacToe } from './tic-tac-toe';
 const SuperTicTacToeCss = require('../ui/css/super-tic-tac-toe.css');
 import { GameInfo } from './gameInfo';
-import { GlobalBoard, HistoryData } from '../common/globalboard';
+import { GlobalBoard } from '../common/globalboard';
 import { Type, State } from '../common/localboard';
 import { MctsNode } from '../ai/mcts';
-import { Storage } from '../common/storage';
+import { Storage, History as HistoryData } from '../common/storage';
 import { message } from 'antd';
 import * as ReactDOM from 'react-dom';
 import 'antd/lib/style/css';
@@ -17,6 +17,8 @@ interface SuperTicTacToeProps {
     autoplay: boolean;
     model: Model;
     historydata: HistoryData | null;
+    min: number;
+    max: number;
 }
 
 interface SuperTicTacToeState{
@@ -31,6 +33,8 @@ interface SuperTicTacToeState{
     model: Model;
     historydata: HistoryData | null;
     playing: boolean;
+    min: number;
+    max: number;
 }
 
 export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTicTacToeState> {
@@ -53,6 +57,8 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
             model: this.props.model,
             historydata: this.props.historydata,
             playing: false,
+            min: this.props.min,
+            max: this.props.max,
         }
     }
 
@@ -210,19 +216,30 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
             autoplay: nextProps.autoplay,
             model: nextProps.model,
             historydata: nextProps.historydata,
+            max: nextProps.max,
+            min: nextProps.min,
         })
     }
 
     private _handlePlayerBack() {
-
+        if (this.state.min > 0) {
+            this.setState({
+                min: this.state.min - 1,
+            })
+        }
     }
 
     private _handlePlayerNext() {
-
+        if (this.state.min < this.state.max) {
+            this.setState({
+                min: this.state.min + 1,
+            })
+        }
     }
 
     private _hanlePlayerPlay() {
         this.setState({
+            min: this.state.min + 1,
             playing: !this.state.playing,
         })
     }
