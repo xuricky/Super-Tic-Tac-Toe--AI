@@ -5,6 +5,13 @@
     font-size: 30px;
 }
 
+:local(.littletitle) {
+    width: 100%;
+    text-align: center;
+    margin: 10px;
+    font-size: 14px;
+}
+
 :local(.global-board) {
     display: flex;
     flex-direction: row;
@@ -25,8 +32,7 @@
     position: relative;
     /* border:1px solid chartreuse; */
     box-sizing: border-box;
-    margin-right: -1px;
-    margin-bottom: -1px;
+    margin-bottom: 10px;
 }
 
 :local(.nomask) {
@@ -34,8 +40,6 @@
     position: relative;
     /* border:1px solid chartreuse; */
     box-sizing: border-box;
-    margin-right: -1px;
-    margin-bottom: -1px;
 }
 
 :local(.text) {
@@ -43,5 +47,5 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
-    font-size: 66px;
+    font-size: 150px;
 }

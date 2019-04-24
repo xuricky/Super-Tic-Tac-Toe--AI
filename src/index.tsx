@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Layout, Menu, Icon, Button, message, Alert } from 'antd';
+import { Layout, Menu, Icon, Button, message, Alert, Modal } from 'antd';
 import './ui/css/index.css';
 import * as serviceWorker from './serviceWorker';
 import { SuperTicTacToe } from './components/super-tic-tac-toe';
@@ -11,7 +11,10 @@ import 'antd/lib/menu/style/css';
 import 'antd/lib/icon/style/css';
 import 'antd/lib/button/style/css';
 import 'antd/lib/message/style/css';
-import { any } from 'prop-types';
+import 'antd/lib/modal/style/css';
+import { Rule } from './components/rule';
+import { Help } from './components/help';
+import { GlobalBoard } from './common/globalboard';
 
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -23,6 +26,13 @@ export enum Model {
   ai_hard
 }
 
+const ModelMessage = {
+  P2P : '人人',
+  ai_easy : '人机(简单的)',
+  ai_medium : "人机(中等的)",
+  ai_hard : "人机(困难的)"
+}
+
 export class App extends React.Component {
 
   public state: {
@@ -31,6 +41,9 @@ export class App extends React.Component {
     autoplay: boolean,
     model: Model,
     historydata: HistoryData | null,
+    rule_visible: boolean,
+    help_visible: boolean,
+    model_message: string,
   }
   constructor(props: any) {
     super(props);
@@ -40,6 +53,9 @@ export class App extends React.Component {
       autoplay: false,
       model: Model.P2P,
       historydata: null,
+      rule_visible: false,
+      help_visible: false,
+      model_message: ModelMessage.P2P,
     };
   }
 
@@ -62,7 +78,7 @@ export class App extends React.Component {
             <Icon type='close-circle'></Icon>
           </div>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['2-1']} defaultOpenKeys={['2']}>
-            <Menu.Item key="1" onClick={this._openRule}>
+            <Menu.Item key="1" onClick={() => this._openRule()}>
               <Icon type="solution" />
               <span>规则</span>
             </Menu.Item>
@@ -98,6 +114,7 @@ export class App extends React.Component {
           <Content className='content' id='content'>
             <SuperTicTacToe autoplay={this.state.autoplay}
                             model={this.state.model}
+                            model_message={this.state.model_message}
                             historydata={this.state.historydata}
                             min={0}
                             max={this.state.historydata ? this.state.historydata.data.length - 1 : 0}/>
@@ -109,6 +126,12 @@ export class App extends React.Component {
                         visible={this.state.visible}>
                 </History>
             </div>
+            <Rule visible={this.state.rule_visible}
+                  handleRuleOK={() => this._closeRule()}
+                  handleRuleCancel={() => this._closeRule()} />
+            <Help visible={this.state.help_visible}
+                  handleHelpOK={() => this._closeHelp()}
+                  handleHelpCancel={() => this._closeHelp()} />
           </Content>
         </Layout>
       </Layout>
@@ -116,26 +139,50 @@ export class App extends React.Component {
   }
 
   private selectModel(key: string) {
-    if (key === '2-1')
+    if (key === '2-1') {
       this.state.model = Model.P2P;
-    else if (key === '2-2-1')
+      this.state.model_message = ModelMessage.P2P;
+    }
+    else if (key === '2-2-1') {
       this.state.model = Model.ai_easy;
-    else if (key === '2-2-2')
-     this.state.model = Model.ai_medium;
-    else if (key === '2-2-3')
+      this.state.model_message = ModelMessage.ai_easy;
+    }
+    else if (key === '2-2-2') {
+      this.state.model = Model.ai_medium;
+      this.state.model_message = ModelMessage.ai_medium;
+    }
+    else if (key === '2-2-3') {
       this.state.model = Model.ai_hard;
+      this.state.model_message = ModelMessage.ai_hard;
+    }
     this.setState({
       model: this.state.model,
+      model_message: this.state.model_message,
     })
   }
 
   private _openRule() {
-      
+      this.setState({
+        rule_visible: true,
+      })
   }
 
+  private _closeRule() {
+    this.setState({
+      rule_visible: false,
+    })
+  }
 
   private _openHelp() {
+    this.setState({
+      help_visible: true,
+    })
+  }
 
+  private _closeHelp() {
+    this.setState({
+      help_visible: false,
+    })
   }
 
   private _renderHistory() {
@@ -159,11 +206,13 @@ export class App extends React.Component {
   }
 
   private _hanlePlayHistory(index: number) {
+    GlobalBoard.getInstance().clearData();
     let historydata = Storage.get(KEY)[index];
     this.setState({
       autoplay: true,
       visible: false,
       historydata,
+      gb: GlobalBoard.getInstance(),
     })
   }
 

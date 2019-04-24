@@ -6,6 +6,11 @@
 }
 
 :local(.board:after) {
+    content: '';
+    overflow: hidden;
+}
+
+:local(.board:after) {
     clear: both;
     content: "";
     display: table;

@@ -123,7 +123,9 @@ export class GlobalBoard {
         this._handleNextStepData(id);
         this.state = this.getState();
         if (this.backMove.length > 0) {
-            this.globalData.data[this.backMove[0]][this.backMove[1]] = 0;
+            if (this.backMove[0] !== id[0] && this.backMove[1] !== id[1]) {
+                this.globalData.data[this.backMove[0]][this.backMove[1]] = 0;
+            }
             this.backMove = [];
         }
         this.utttState = this._transferGlobalToUtttState();

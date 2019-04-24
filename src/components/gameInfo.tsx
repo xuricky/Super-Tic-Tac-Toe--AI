@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Interface } from 'readline';
 import { State } from '../common/localboard';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 const GameInfoCss = require('../ui/css/gameinfo.css');
 import 'antd/lib/button/style/css';
 
@@ -47,12 +47,18 @@ export class GameInfo extends React.Component<GameInfoProps> {
                     </Button>
                 </div>
                 <div className={GameInfoCss.gameinfo}>
-                    {this.props.winner === State.ai_win? 'GAME OVER, WINNER IS AI!' 
+                    {/* {this.props.winner === State.ai_win? 'GAME OVER, WINNER IS AI!' 
                     : this.props.winner === State.human_win ? 'Game Over, WINNER IS HUMAN!'
                     : this.props.winner === State.draw ? '平局'
-                    : null}
+                    : null} */}
+                    {this.props.winner !== State.active && this.renderWinnerInfo(this.props.winner)}
                 </div>
             </div>
         )
+    }
+
+    renderWinnerInfo(state: State) {
+        let info = state === State.ai_win ? 'GAME OVER, WINNER IS AI!' : state === State.human_win ? 'Game Over, WINNER IS HUMAN!' : '平局';
+        message.success(info, 10);
     }
 }

@@ -12,10 +12,16 @@ import 'antd/lib/style/css';
 import { Player } from './player';
 import { Model } from '../index';
 
+message.config({
+    maxCount: 3,
+    getContainer: () => document.getElementById('root') as HTMLElement,
+})
+
 interface SuperTicTacToeProps {
     [propname: string]: any;
     autoplay: boolean;
     model: Model;
+    model_message: string;
     historydata: HistoryData | null;
     min: number;
     max: number;
@@ -35,6 +41,7 @@ interface SuperTicTacToeState{
     playing: boolean;
     min: number;
     max: number;
+    model_message: string;
 }
 
 export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTicTacToeState> {
@@ -56,6 +63,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
             winner: State.active,
             autoplay: this.props.autoplay,
             model: this.props.model,
+            model_message: this.props.model_message,
             historydata: this.props.historydata,
             playing: false,
             min: this.props.min,
@@ -68,6 +76,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
         return (
             <div>
                 <div className={SuperTicTacToeCss.title}>{`Next Turn to ${gb.getGlobalData().AIIsNext ? this.state.config[Type.AI] : this.state.config[Type.HUMAN]}`}</div>
+                <div className={SuperTicTacToeCss.littletitle}>{`模式: ${this.state.model_message}`}</div>
                 <div className={SuperTicTacToeCss['global-board']}>
                     <div className={SuperTicTacToeCss['local-board']}>
                         {this._renderTicTacToe(0)}
@@ -192,11 +201,6 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
 
     private _handleSave() {
         let gb = this.state.gb;
-        message.config({
-            top: 100,
-            duration: 2,
-            maxCount: 3,
-        });
         const info = () => {
             message.success('保存成功');
         }
@@ -214,20 +218,24 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
     }
 
     componentWillReceiveProps(nextProps: SuperTicTacToeProps) {
-        this.setState({
+        let state = {
             autoplay: nextProps.autoplay,
             model: nextProps.model,
+            model_message: nextProps.model_message,
             historydata: nextProps.historydata,
             max: nextProps.max,
             min: nextProps.min,
-        })
+        };
+        if (nextProps.gb) state = Object.assign(state, {gb: nextProps.gb});
+        this.setState(state);
     }
 
-    componentDidMount() {
-        if (this.state.autoplay) {
-            this._handleGameStart();
-        }
-    }
+    // componentDidMount() {
+    //     if (this.state.autoplay) {
+    //         this._handleGameStart();
+    //     }
+    // }
+
 
     private _handlePlayerBack() {
         if (this.state.min > 0) {
@@ -265,7 +273,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
                         clearInterval(this.timer);
                     }
                 }
-            }, 1000)
+            }, 1500)
         }
     }
 
