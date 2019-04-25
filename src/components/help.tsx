@@ -27,7 +27,7 @@ export class Help extends React.Component<HelpProps> {
                     onOk={this.props.handleHelpOK} onCancel={this.props.handleHelpCancel}
                     centered={true}
                     >
-                <p>这里是help content.</p>
+                <p>如果发现什么bug或者问题，欢迎联系，邮箱为249269448@qq.com</p>
             </Modal>
         )
     }
