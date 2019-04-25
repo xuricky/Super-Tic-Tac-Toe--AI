@@ -75,6 +75,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
         const gb = this.state.gb;
         return (
             <div>
+                <div className={SuperTicTacToeCss.title}>超级井字棋</div>
                 <div className={SuperTicTacToeCss.title}>{`Next Turn to ${gb.getGlobalData().AIIsNext ? this.state.config[Type.AI] : this.state.config[Type.HUMAN]}`}</div>
                 <div className={SuperTicTacToeCss.littletitle}>{`模式: ${this.state.model_message}`}</div>
                 <div className={SuperTicTacToeCss['global-board']}>
