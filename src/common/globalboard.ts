@@ -65,6 +65,7 @@ export class GlobalBoard {
             lastMove: [],
         };
         this.historyData = [];
+        this.storagedata = [];
         this.backMove = [];
         this.state = State.active;
         this.utttState = this._transferGlobalToUtttState();
@@ -252,7 +253,7 @@ export class GlobalBoard {
     public save(model_message: string, model: Model) {
         let date = new Date();
         let time = `${date.getMonth() + 1}月${date.getDate()}号${date.getHours()}时${date.getMinutes()}分`;
-        let historyData: History = {time, state: this.state, data: this.storagedata, model_message, model}
+        let historyData: History = {time, state: this.state, data: this.storagedata.slice(), model_message, model}
         Storage.set(KEY, historyData);
     }
 }
