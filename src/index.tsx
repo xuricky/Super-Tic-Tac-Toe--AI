@@ -158,6 +158,7 @@ export class App extends React.Component {
     this.setState({
       model: this.state.model,
       model_message: this.state.model_message,
+      historydata: null,
     })
   }
 
