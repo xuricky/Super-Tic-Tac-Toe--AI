@@ -249,10 +249,10 @@ export class GlobalBoard {
         return utttState;
     }
 
-    public save(model_message: string) {
+    public save(model_message: string, model: Model) {
         let date = new Date();
         let time = `${date.getMonth() + 1}月${date.getDate()}号${date.getHours()}时${date.getMinutes()}分`;
-        let historyData: History = {time, state: this.state, data: this.storagedata, model_message}
+        let historyData: History = {time, state: this.state, data: this.storagedata, model_message, model}
         Storage.set(KEY, historyData);
     }
 }
