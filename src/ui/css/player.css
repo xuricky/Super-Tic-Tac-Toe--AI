@@ -15,3 +15,7 @@
 :local(.exit) {
     margin: auto 30px;
 }
+
+:local(.intoplay) {
+    margin: auto 20px;
+}

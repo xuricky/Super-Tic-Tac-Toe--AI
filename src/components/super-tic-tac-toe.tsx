@@ -100,6 +100,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
                                                 next={() => this._handlePlayerNext()}
                                                 play={() => this._hanlePlayerPlay()}
                                                 pause={() => this._hanlePlayerPause()}
+                                                intoplay={() => this.intoplay()}
                                                 playing={this.state.playing}></Player> : <GameInfo handleGameStart={() => this._handleGameStart()}
                           handleGameOver={() => this._handleGameOver()}
                           handleBack={() => this._handleBack()}
@@ -142,7 +143,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
             gb.pushData(id, aiIsNext);
             this.setState({
                 gb: this.gb,
-                lastMove: id
+                lastMove: id,
             });         
         }
     }
@@ -180,7 +181,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
         let gb = this.state.gb;
         let AITurn = gb.getGlobalData().AIIsNext;
         setTimeout(() => {
-            if (this.state.model !== Model.P2P && AITurn) {
+            if (this.state.model !== Model.P2P && AITurn && !this.state.autoplay) {
                 let time = this.state.model === Model.ai_easy ? 0.1 : 
                             this.state.model === Model.ai_medium ? 0.5 : 1;
                 let mcts = new MctsNode(null, !AITurn, this.state.lastMove);
@@ -237,6 +238,12 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
     //     }
     // }
 
+    private intoplay() {
+        this.setState({
+            autoplay: false,
+        })
+    }
+
 
     private _handlePlayerBack() {
         if (this.state.min > 0) {
@@ -264,7 +271,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
             this.timer = setInterval(() => {
                 if (this.state.historydata) {
                     let data = this.state.historydata.data[this.state.min];
-                    if (this.state.min <= this.state.max) {
+                    if (this.state.min <= this.state.max && this.state.autoplay) {
                         this._handleClick(data.id, data.isAI);
                         this.setState({
                             min: this.state.min + 1,

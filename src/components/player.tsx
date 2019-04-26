@@ -8,6 +8,7 @@ interface PlayerPorps{
     next(): void;
     play(): void;
     pause(): void;
+    intoplay(): void;
     playing: boolean;
 }
 
@@ -27,6 +28,7 @@ export class Player extends React.Component<PlayerPorps> {
                 <Icon type="step-backward" onClick={this.props.back}/>
                 <Icon type={this.state.playing ? "pause" : 'caret-right'} onClick={this.state.playing ? this.props.pause : this.props.play}/>
                 <Icon type="step-forward" onClick={this.props.next}/>
+                <Button type='primary' onClick={this.props.intoplay} className={PlayerCSS.exit}>下棋</Button>
                 <Button type='primary' onClick={this.props.getout} className={PlayerCSS.exit}>退出</Button>
             </div>
         )
