@@ -232,7 +232,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
         if (nextProps.model !== this.state.model) {
             GlobalBoard.getInstance().clearData();
             GlobalBoard.getInstance().initStartData();
-            state = Object.assign({autoplay: false});
+            state = Object.assign(state, {autoplay: false});
         }
         this.setState(state);
     }
