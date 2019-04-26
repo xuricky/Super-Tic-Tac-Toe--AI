@@ -1,10 +1,10 @@
 import { StorageData } from './globalboard';
 import { State } from './localboard';
-
 export interface History {
     data: StorageData[],
     state: State,
-    time: string,  
+    time: string,
+    model_message: string,
 }
 
 export const KEY = 'LOVEXLL';

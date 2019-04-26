@@ -1,7 +1,7 @@
 import { LocalBoard, sucArr, Type, State, VirtualData } from './localboard';
 import { SquareState } from '../components/square';
 import {History, Storage, KEY} from './storage';
-
+import { Model } from '../index';
 
 export interface StorageData {
     id: number[],
@@ -249,10 +249,10 @@ export class GlobalBoard {
         return utttState;
     }
 
-    public save() {
+    public save(model_message: string) {
         let date = new Date();
         let time = `${date.getMonth() + 1}月${date.getDate()}号${date.getHours()}时${date.getMinutes()}分`;
-        let historyData: History = {time, state: this.state, data: this.storagedata}
+        let historyData: History = {time, state: this.state, data: this.storagedata, model_message}
         Storage.set(KEY, historyData);
     }
 }

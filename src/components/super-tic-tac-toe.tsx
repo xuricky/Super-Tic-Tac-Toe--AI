@@ -77,7 +77,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
             <div>
                 <div className={SuperTicTacToeCss.title}>超级井字棋</div>
                 <div className={SuperTicTacToeCss.title}>{`Next Turn to ${gb.getGlobalData().AIIsNext ? this.state.config[Type.AI] : this.state.config[Type.HUMAN]}`}</div>
-                <div className={SuperTicTacToeCss.littletitle}>{`模式: ${this.state.model_message}`}</div>
+                <div className={SuperTicTacToeCss.littletitle}>{`模式: ${this.state.historydata && this.state.historydata.model_message ?  this.state.historydata.model_message : this.state.model_message}`}</div>
                 <div className={SuperTicTacToeCss['global-board']}>
                     <div className={SuperTicTacToeCss['local-board']}>
                         {this._renderTicTacToe(0)}
@@ -104,7 +104,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
                                                 playing={this.state.playing}></Player> : <GameInfo handleGameStart={() => this._handleGameStart()}
                           handleGameOver={() => this._handleGameOver()}
                           handleBack={() => this._handleBack()}
-                          handleSave={() => this._handleSave()}
+                          handleSave={() => this._handleSave(this.state.model_message)}
                           gameStart={this.state.gameStart}
                           winner={this.state.winner}></GameInfo>}
             </div>
@@ -192,7 +192,7 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
             let state_ = gb.getState();
             if (!this.state.endGame && state_ !== null && state_ !== State.active) {
                 // alert(`Game over,${state_ === State.ai_win ? 'AI WIN!' : state_ === State.human_win ? 'HUMEN WIN!' : '平局！'}`);
-                this._handleSave();
+                this._handleSave(this.state.model_message);
                 this.setState({
                     endGame: true,
                     winner: state_,
@@ -201,13 +201,13 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
         }, 0);
     }
 
-    private _handleSave() {
+    private _handleSave(model_message: string) {
         let gb = this.state.gb;
         const info = () => {
             message.success('保存成功');
         }
         if (Storage.valid()) {
-            gb.save();
+            gb.save(model_message);
             info();
         }
     }
@@ -229,14 +229,13 @@ export class SuperTicTacToe extends React.Component<SuperTicTacToeProps, SuperTi
             min: nextProps.min,
         };
         if (nextProps.gb) state = Object.assign(state, {gb: nextProps.gb});
+        if (nextProps.model !== this.state.model) {
+            GlobalBoard.getInstance().clearData();
+            GlobalBoard.getInstance().initStartData();
+            state = Object.assign({autoplay: false});
+        }
         this.setState(state);
     }
-
-    // componentDidMount() {
-    //     if (this.state.autoplay) {
-    //         this._handleGameStart();
-    //     }
-    // }
 
     private intoplay() {
         this.setState({
