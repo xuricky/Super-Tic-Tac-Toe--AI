@@ -18,6 +18,14 @@
     width: 535px;
 }
 
+:local(.global-board-mask) {
+    display: flex;
+    flex-direction: row;
+    width: 535px;
+    opacity: 0.9;
+    pointer-events: none;
+}
+
 
 :local(.local-board:after) {
     clear: both;
