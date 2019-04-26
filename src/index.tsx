@@ -83,14 +83,14 @@ export class App extends React.Component {
               <span>规则</span>
             </Menu.Item>
             <SubMenu key='2' title={<span><Icon type='user' /><span>对抗模式</span></span>}>
-                <Menu.Item key='2-1' onClick={() => this.selectModel('2-1')}>
+                <Menu.Item key='2-1' onClick={() => this.selectModel(Model.P2P)}>
                     <Icon type='user' />
                     <span>人人对战</span>
                 </Menu.Item>
                 <SubMenu key='2-2' title={<span><Icon type='android'></Icon><span>人机对战</span></span>}>
-                    <Menu.Item key='2-2-1' onClick={() => this.selectModel('2-2-1')}>简单</Menu.Item>
-                    <Menu.Item key='2-2-2' onClick={() => this.selectModel('2-2-2')}>中等</Menu.Item>
-                    <Menu.Item key='2-2-3' onClick={() => this.selectModel('2-2-3')}>困难</Menu.Item>
+                    <Menu.Item key='2-2-1' onClick={() => this.selectModel(Model.ai_easy)}>简单</Menu.Item>
+                    <Menu.Item key='2-2-2' onClick={() => this.selectModel(Model.ai_medium)}>中等</Menu.Item>
+                    <Menu.Item key='2-2-3' onClick={() => this.selectModel(Model.ai_hard)}>困难</Menu.Item>
                 </SubMenu>
             </SubMenu>
             <Menu.Item key="3" onClick={() => this._renderHistory()}>
@@ -138,28 +138,24 @@ export class App extends React.Component {
     );
   }
 
-  private selectModel(key: string) {
-    if (key === '2-1') {
-      this.state.model = Model.P2P;
-      this.state.model_message = ModelMessage.P2P;
+  private selectModel(model: number) {
+    if (this.state.model !== model) {
+      let model_message;
+      if (model === Model.P2P) {
+        model_message = ModelMessage.P2P;
+      } else if (model === Model.ai_easy) {
+        model_message = ModelMessage.ai_easy;
+      } else if (model === Model.ai_medium) {
+        model_message = ModelMessage.ai_medium;
+      } else if (model === Model.ai_hard) {
+        model_message = ModelMessage.ai_hard;
+      }
+      this.setState({
+        model,
+        model_message,
+        historydata: null,
+      })
     }
-    else if (key === '2-2-1') {
-      this.state.model = Model.ai_easy;
-      this.state.model_message = ModelMessage.ai_easy;
-    }
-    else if (key === '2-2-2') {
-      this.state.model = Model.ai_medium;
-      this.state.model_message = ModelMessage.ai_medium;
-    }
-    else if (key === '2-2-3') {
-      this.state.model = Model.ai_hard;
-      this.state.model_message = ModelMessage.ai_hard;
-    }
-    this.setState({
-      model: this.state.model,
-      model_message: this.state.model_message,
-      historydata: null,
-    })
   }
 
   private _openRule() {
